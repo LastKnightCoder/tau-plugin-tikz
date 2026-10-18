@@ -1,6 +1,6 @@
 import { build } from "esbuild";
 import AdmZip from "adm-zip";
-import { mkdir, readFile, writeFile, mkdtemp, rename, rm } from "node:fs/promises";
+import { mkdir, readFile, writeFile, mkdtemp, rename, rm, stat } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID, createHash } from "node:crypto";
 
@@ -33,7 +33,13 @@ try {
   )
     throw new Error("manifest.description 必须为1至160字简介");
   await writeFile(path.join(staging, "README.md"), readme);
-  for (const name of ["LICENSE", "CHANGELOG.md"]) {
+  for (const name of [
+    "LICENSE",
+    "CHANGELOG.md",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSE-LPPL.md",
+    "LICENSE-BAKOMA.txt",
+  ]) {
     try {
       await writeFile(path.join(staging, name), await readFile(name));
     } catch (error) {
@@ -50,7 +56,18 @@ try {
     jsx: "automatic",
     external: shared,
     metafile: true,
-    loader: { ".svg": "dataurl" },
+    loader: { ".svg": "dataurl", ".md": "text" },
+    plugins: [
+      {
+        name: "tikz-vendor-text",
+        setup(builder) {
+          builder.onLoad({ filter: /\/vendor\/(tikzjax\.js|tikz\.vendor\.css)$/ }, async args => ({
+            contents: await readFile(args.path, "utf8"),
+            loader: "text",
+          }));
+        },
+      },
+    ],
     define: {
       __PLUGIN_META__: JSON.stringify({
         id: manifest.id,
@@ -93,6 +110,11 @@ try {
   zip.addLocalFolder(destination, manifest.id);
   const archive = path.resolve("dist", `${manifest.id}-${manifest.version}.zip`);
   zip.writeZip(archive);
+  const archiveSize = (await stat(archive)).size;
+  const expandedSize = zip.getEntries().reduce((total, entry) => total + entry.header.size, 0);
+  if (archiveSize > 8 * 1024 * 1024 || expandedSize > 32 * 1024 * 1024)
+    throw new Error("插件包超过中心限制：ZIP 8 MiB，展开总量 32 MiB");
+  console.log(`ZIP ${archiveSize} 字节，展开 ${expandedSize} 字节`);
   console.log(
     `构建完成：${archive}\n运行 pnpm install:local，或将 ZIP 解压至 ~/.editor/plugins，然后在插件管理中刷新列表并启用。`
   );
