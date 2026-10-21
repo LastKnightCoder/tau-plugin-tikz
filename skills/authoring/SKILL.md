@@ -1,3 +1,8 @@
+---
+name: "TikZ 绘图"
+description: "在用户要求用 TikZ 绘图或修改文档中的 TikZ 源码时使用。"
+---
+
 # TikZ 绘图
 
 在文档中使用 tikz 围栏插入绘图，围栏内容为 TikZ 源码：

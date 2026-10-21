@@ -3,6 +3,7 @@ import AdmZip from "adm-zip";
 import { mkdir, readFile, writeFile, mkdtemp, rename, rm, stat } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID, createHash } from "node:crypto";
+import { collectSkills } from "./skills.mjs";
 
 const manifest = JSON.parse(await readFile("manifest.json", "utf8"));
 if (!/^[a-z0-9]+(?:[.-][a-z0-9]+)+$/.test(manifest.id))
@@ -33,19 +34,18 @@ try {
   )
     throw new Error("manifest.description 必须为1至160字简介");
   await writeFile(path.join(staging, "README.md"), readme);
-  for (const name of [
-    "LICENSE",
-    "CHANGELOG.md",
-    "THIRD_PARTY_NOTICES.md",
-    "LICENSE-LPPL.md",
-    "LICENSE-BAKOMA.txt",
-  ]) {
+  for (const name of ["CHANGELOG.md"]) {
     try {
       await writeFile(path.join(staging, name), await readFile(name));
     } catch (error) {
       if (error.code !== "ENOENT") throw error;
     }
   }
+  // 插件中心只接收 LICENSE 一个许可文件，第三方许可全文按顺序附在其后
+  const licenses = [];
+  for (const name of ["LICENSE", "THIRD_PARTY_NOTICES.md", "LICENSE-LPPL.md", "LICENSE-BAKOMA.txt"])
+    licenses.push(`${name === "LICENSE" ? "" : `\n\n----- ${name} -----\n\n`}${await readFile(name, "utf8")}`);
+  await writeFile(path.join(staging, "LICENSE"), licenses.join(""));
   const result = await build({
     entryPoints: ["src/index.tsx"],
     outfile: path.join(staging, "main.js"),
@@ -85,14 +85,19 @@ try {
   const styles = Object.keys(result.metafile.outputs).some(file => file.endsWith("main.css"));
   if (manifest.sync !== undefined)
     throw new Error("同步提供方应在渲染入口注册，不再支持Node后台入口");
+  const skills = await collectSkills(staging);
   const integrity = {};
+  for (const file of skills.files)
+    integrity[file] = createHash("sha256")
+      .update(await readFile(path.join(staging, file)))
+      .digest("hex");
   for (const file of ["main.js", ...(styles ? ["main.css"] : [])])
     integrity[file] = createHash("sha256")
       .update(await readFile(path.join(staging, file)))
       .digest("hex");
   await writeFile(
     path.join(staging, "manifest.json"),
-    JSON.stringify({ ...manifest, integrity, ...(styles ? { styles: "main.css" } : {}) }, null, 2)
+    JSON.stringify({ ...manifest, ...(skills.ids.length ? { skills: skills.ids } : {}), integrity, ...(styles ? { styles: "main.css" } : {}) }, null, 2)
   );
   const destination = path.resolve("dist", `${manifest.version}-${buildId}`);
   await rename(staging, destination);

@@ -31,9 +31,7 @@ const allowed = [
   "README.md",
   "LICENSE",
   "CHANGELOG.md",
-  "THIRD_PARTY_NOTICES.md",
-  "LICENSE-LPPL.md",
-  "LICENSE-BAKOMA.txt",
+  ...Object.keys(packaged.integrity ?? {}),
 ];
 for (const entry of entries) {
   if (!allowed.some(file => entry.entryName === `${manifest.id}/${file}`))
@@ -41,7 +39,7 @@ for (const entry of entries) {
 }
 if (packaged.id !== manifest.id || packaged.version !== manifest.version)
   throw new Error("ZIP 与当前 manifest 不一致，请重新构建");
-for (const file of ["main.js", ...(packaged.styles ? ["main.css"] : [])]) {
+for (const file of ["main.js", ...Object.keys(packaged.integrity ?? {})]) {
   const bytes = zip.readFile(`${manifest.id}/${file}`);
   if (!bytes || createHash("sha256").update(bytes).digest("hex") !== packaged.integrity?.[file])
     throw new Error(`产物校验失败：${file}`);
