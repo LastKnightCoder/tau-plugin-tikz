@@ -1,5 +1,4 @@
 {
-  "formatVersion": 3,
   "id": "tau.tikz",
   "name": "TikZ 绘图",
   "description": "在文档和博客中离线编译 TikZ，支持源码编辑与 SVG 预览。",
@@ -13,42 +12,23 @@
     "绘图"
   ],
   "version": "0.1.6",
-  "apiVersion": 1,
-  "platform": "portable",
-  "format": "cjs",
-  "main": "main.js",
-  "editor": true,
-  "profile": "web-v1",
+  "requires": [
+    "sourceEditor"
+  ],
+  "editor": {
+    "elements": {
+      "tikz": "edit"
+    }
+  },
   "targets": {
     "desktop": {
-      "minAppVersion": "0.59.2",
-      "required": [
-        "sourceEditor"
-      ],
-      "optional": [],
-      "elements": {
-        "tikz": "edit"
-      }
+      "minAppVersion": "0.59.2"
     },
     "android": {
-      "minAppVersion": "0.2.3",
-      "required": [
-        "sourceEditor"
-      ],
-      "optional": [],
-      "elements": {
-        "tikz": "edit"
-      }
+      "minAppVersion": "0.2.3"
     },
     "ios": {
-      "minAppVersion": "0.2.3",
-      "required": [
-        "sourceEditor"
-      ],
-      "optional": [],
-      "elements": {
-        "tikz": "edit"
-      }
+      "minAppVersion": "0.2.3"
     }
   }
 }
