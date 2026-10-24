@@ -1,12 +1,12 @@
 # 兼容性与开发验证
 
-使用 SDK 0.37.0与 UI 0.4.0。SDK 已发布到 npm，使用仓库内的正式 npm 依赖与锁文件，执行 pnpm install --frozen-lockfile、构建和测试，无需注入本地 SDK。
+使用 SDK 0.41.0与 UI 0.4.0。SDK 已发布到 npm，使用仓库内的正式 npm 依赖与锁文件，执行 pnpm install --frozen-lockfile、构建和测试，无需注入本地 SDK。
 
 ## 平台边界
 
 同一个作者清单声明 desktop、android、ios，构建生成同一份格式 3 ZIP。插件 ID、节点类型与数据保持不变。TikZ 使用插件内浏览器编译器与共用源码编辑组件，保留纯 Markdown Skill 和静态导出。
 
-环境只提供 platform 和 input.coarsePointer/finePointer，不包含布局或能力列表。公共要求由构建器生成，实际额外需求在 requires 声明；用户权限和文档只读状态仍独立判断。
+环境只提供 platform 和 input.coarsePointer/finePointer，不包含布局或能力列表。功能直接通过统一 API 注册，不另列能力需求；用户权限和文档只读状态仍独立判断。
 
 纯 Markdown Skill 由构建器打包，桌面消费、移动只保存。正文和博客使用同一份节点定义，不依赖应用 activate。
 
