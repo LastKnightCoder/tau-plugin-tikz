@@ -4,7 +4,7 @@
   "description": "在文档和博客中离线编译 TikZ，支持源码编辑与 SVG 预览。",
   "categories": ["editor", "ai"],
   "keywords": ["TikZ", "LaTeX", "绘图"],
-  "version": "0.1.7",
+  "version": "0.1.8",
   "targets": {
     "desktop": {
       "minAppVersion": "0.59.4"
