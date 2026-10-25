@@ -8,15 +8,14 @@ export function TikzBlock({
   children,
   element,
 }: EditorElementRenderProps<TikzElement>) {
-  const { update, theme } = useSourceBlock(element);
+  const { theme } = useSourceBlock(element);
   return (
     <div {...attributes}>
       <SourceBlockEditor
         mode="stex"
         title="TikZ"
         icon={PenTool}
-        initValue={element.content}
-        onChange={content => update({ content })}
+        field="content"
         element={element}
         center
       >

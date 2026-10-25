@@ -11,7 +11,7 @@
     "LaTeX",
     "绘图"
   ],
-  "version": "0.1.9",
+  "version": "0.1.10",
   "targets": {
     "desktop": {
       "minAppVersion": "0.59.5"

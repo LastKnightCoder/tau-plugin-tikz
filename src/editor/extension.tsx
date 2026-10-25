@@ -14,6 +14,8 @@ export const tikzExtension = defineEditorExtension({
   elements: [
     defineEditorElement<TikzElement>({
       type: "tikz",
+      dataVersion: 1,
+      collaboration: { textFields: ["content"] },
       kind: "block",
       drag: true,
       isVoid: true,
