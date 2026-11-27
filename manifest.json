@@ -36,16 +36,16 @@
     "zh-TW",
     "en-US"
   ],
-  "version": "0.1.12",
+  "version": "0.1.13",
   "targets": {
     "desktop": {
       "minAppVersion": "0.68.0"
     },
     "android": {
-      "minAppVersion": "0.6.0"
+      "minAppVersion": "0.7.0"
     },
     "ios": {
-      "minAppVersion": "0.6.0"
+      "minAppVersion": "0.7.0"
     }
   }
 }
