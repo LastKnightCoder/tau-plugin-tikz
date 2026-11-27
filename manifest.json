@@ -11,16 +11,41 @@
     "LaTeX",
     "绘图"
   ],
-  "version": "0.1.11",
+  "i18n": {
+    "zh-TW": {
+      "name": "TikZ 繪圖",
+      "description": "在文件與部落格中離線編譯 TikZ，支援原始碼編輯與 SVG 預覽。",
+      "keywords": [
+        "TikZ",
+        "LaTeX",
+        "繪圖"
+      ]
+    },
+    "en-US": {
+      "name": "TikZ Diagrams",
+      "description": "Compile TikZ diagrams offline in documents and blogs with source editing and SVG preview.",
+      "keywords": [
+        "TikZ",
+        "LaTeX",
+        "diagrams"
+      ]
+    }
+  },
+  "locales": [
+    "zh-CN",
+    "zh-TW",
+    "en-US"
+  ],
+  "version": "0.1.12",
   "targets": {
     "desktop": {
-      "minAppVersion": "0.59.5"
+      "minAppVersion": "0.68.0"
     },
     "android": {
-      "minAppVersion": "0.2.7"
+      "minAppVersion": "0.6.0"
     },
     "ios": {
-      "minAppVersion": "0.2.7"
+      "minAppVersion": "0.6.0"
     }
   }
 }
