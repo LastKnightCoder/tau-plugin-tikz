@@ -4,7 +4,12 @@ import { afterEach, expect, it, vi } from "vitest";
 import { TikzPreview } from "../render/TikzPreview";
 import { compileTikz } from "../compiler/compile";
 
-vi.mock("@tau/plugins", () => ({ useReportPreviewError: () => false }));
+vi.mock("@tau/plugins", () => ({
+  useReportPreviewError: () => false,
+  // i18n 词典在测试中只回显 key，断言不依赖具体译文。
+  useI18n: () => ({ t: (key: string) => key }),
+  defineI18n: (config: unknown) => config,
+}));
 vi.mock("../compiler/compile", () => ({ compileTikz: vi.fn() }));
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const host = document.createElement("div");

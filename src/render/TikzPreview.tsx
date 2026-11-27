@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useReportPreviewError } from "@tau/plugins";
+import { useI18n, useReportPreviewError } from "@tau/plugins";
 import { compileTikz } from "../compiler/compile";
+import { messages } from "../i18n";
 
 export function TikzPreview({ content, isDark }: { content: string; isDark: boolean }) {
+  const { t } = useI18n(messages);
   const container = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [hasResult, setHasResult] = useState(false);
@@ -38,8 +40,8 @@ export function TikzPreview({ content, isDark }: { content: string; isDark: bool
         ref={container}
         style={{ filter: isDark ? "invert(1) hue-rotate(180deg)" : undefined }}
       />
-      {!content.trim() && <p>暂无 TikZ 内容</p>}
-      {content.trim() && !hasResult && !error && <p role="status">正在编译 TikZ…</p>}
+      {!content.trim() && <p>{t("preview.empty")}</p>}
+      {content.trim() && !hasResult && !error && <p role="status">{t("preview.compiling")}</p>}
       {error && !reported && <p role="alert">{error}</p>}
     </div>
   );
